@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Browse courses — Campus{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between">
+  <h1 class="text-2xl font-semibold">Courses</h1>
+  <form method="get" class="flex gap-2">
+    <input name="q" value="{{ request.GET.q }}" placeholder="Search courses"
+           class="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm">
+    <button class="rounded-md bg-zinc-800 px-3 py-1.5 text-sm hover:bg-zinc-700">Search</button>
+  </form>
+</div>
+
+<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {% for course in courses %}
+    <a href="{% url 'catalog:course_detail' course.slug %}"
+       class="group rounded-lg border border-zinc-800 bg-zinc-900 p-5 hover:border-brand-600">
+      <p class="text-xs uppercase tracking-wide text-brand-500">{{ course.subject.name }}</p>
+      <h2 class="mt-1 font-medium group-hover:text-white">{{ course.title }}</h2>
+      <p class="mt-2 line-clamp-2 text-sm text-zinc-400">{{ course.headline }}</p>
+      <div class="mt-4 flex items-center justify-between text-sm">
+        <span class="text-zinc-400">{{ course.owner.display_name }}</span>
+        <span class="font-medium">{% if course.is_free %}Free{% else %}${{ course.price }}{% endif %}</span>
+      </div>
+    </a>
+  {% empty %}
+    <p class="text-zinc-400">No courses published yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

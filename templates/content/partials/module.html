@@ -1,0 +1,28 @@
+<div class="rounded-lg border border-zinc-800 bg-zinc-900" data-node="module" data-id="{{ module.id }}">
+  <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+    <span class="font-medium">{{ module.title }}</span>
+    <button class="text-xs text-red-400 hover:underline"
+            hx-post="{% url 'content:delete_module' module.id %}"
+            hx-target="closest [data-node='module']" hx-swap="outerHTML"
+            hx-confirm="Delete this module and its lessons?">Delete</button>
+  </div>
+
+  <div class="space-y-2 p-4">
+    <div id="lessons-{{ module.id }}" class="space-y-2">
+      {% for lesson in module.lessons.all %}
+        {% include "content/partials/lesson.html" with lesson=lesson %}
+      {% endfor %}
+    </div>
+
+    <form class="flex gap-2"
+          hx-post="{% url 'content:add_lesson' module.id %}"
+          hx-target="#lessons-{{ module.id }}" hx-swap="beforeend"
+          hx-on::after-request="this.reset()">
+      <input name="title" placeholder="New lesson title" required>
+      <label class="flex items-center gap-1 whitespace-nowrap text-xs text-zinc-400">
+        <input type="checkbox" name="is_preview" class="h-3 w-3"> preview
+      </label>
+      <button class="whitespace-nowrap rounded-md bg-zinc-800 px-3 py-1.5 text-sm hover:bg-zinc-700">Add lesson</button>
+    </form>
+  </div>
+</div>

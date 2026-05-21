@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} — Campus{% endblock %}
+{% block content %}
+<div class="grid gap-8 lg:grid-cols-3">
+  <div class="lg:col-span-2">
+    <p class="text-xs uppercase tracking-wide text-brand-500">{{ course.subject.name }}</p>
+    <h1 class="mt-1 text-3xl font-bold">{{ course.title }}</h1>
+    <p class="mt-2 text-lg text-zinc-300">{{ course.headline }}</p>
+    <p class="mt-4 whitespace-pre-line text-zinc-400">{{ course.overview }}</p>
+
+    <h2 class="mt-8 text-xl font-semibold">Curriculum</h2>
+    <div class="mt-3 space-y-3">
+      {% for module in course.modules.all %}
+        <div class="rounded-lg border border-zinc-800 bg-zinc-900">
+          <div class="border-b border-zinc-800 px-4 py-3 font-medium">{{ module.title }}</div>
+          <ul class="divide-y divide-zinc-800">
+            {% for lesson in module.lessons.all %}
+              <li class="flex items-center justify-between px-4 py-2 text-sm">
+                <span>{{ lesson.title }}</span>
+                {% if lesson.is_preview %}<span class="text-xs text-brand-500">Preview</span>{% endif %}
+              </li>
+            {% empty %}
+              <li class="px-4 py-2 text-sm text-zinc-500">No lessons yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% empty %}
+        <p class="text-zinc-400">Curriculum coming soon.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside class="lg:col-span-1">
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <p class="text-2xl font-bold">{% if course.is_free %}Free{% else %}${{ course.price }}{% endif %}</p>
+      <p class="mt-1 text-sm text-zinc-400">{{ course.enrolled_count }} enrolled</p>
+      <button class="mt-4 w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">
+        Enroll
+      </button>
+      <p class="mt-2 text-center text-xs text-zinc-500">Enrollment lands in the next phase.</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

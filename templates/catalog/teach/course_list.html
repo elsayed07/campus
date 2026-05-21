@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Teach — Campus{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between">
+  <h1 class="text-2xl font-semibold">Your courses</h1>
+  <a href="{% url 'catalog:course_create' %}"
+     class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium hover:bg-brand-500">New course</a>
+</div>
+
+<div class="mt-6 overflow-hidden rounded-lg border border-zinc-800">
+  <table class="w-full text-sm">
+    <thead class="bg-zinc-900 text-left text-zinc-400">
+      <tr>
+        <th class="px-4 py-3 font-medium">Title</th>
+        <th class="px-4 py-3 font-medium">Subject</th>
+        <th class="px-4 py-3 font-medium">State</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-zinc-800">
+      {% for course in courses %}
+        <tr>
+          <td class="px-4 py-3">{{ course.title }}</td>
+          <td class="px-4 py-3 text-zinc-400">{{ course.subject.name }}</td>
+          <td class="px-4 py-3">
+            <span class="rounded bg-zinc-800 px-2 py-0.5 text-xs">{{ course.get_state_display }}</span>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <a href="{% url 'content:course_builder' course.slug %}" class="text-brand-500 hover:underline">Build</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="px-4 py-6 text-center text-zinc-500">No courses yet — create your first.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

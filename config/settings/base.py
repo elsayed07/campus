@@ -32,6 +32,8 @@ THIRD_PARTY_APPS = [
 # Domain apps are added here as each build phase lands.
 LOCAL_APPS = [
     "apps.accounts",
+    "apps.catalog",
+    "apps.content",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

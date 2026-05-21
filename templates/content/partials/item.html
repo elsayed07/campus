@@ -1,0 +1,8 @@
+<div class="flex items-center justify-between rounded bg-zinc-900 px-3 py-1.5 text-xs"
+     data-node="item" data-id="{{ item.id }}">
+  <span><span class="text-brand-500">{{ item.get_kind_display }}</span>
+    · {{ item.title|default:"Untitled" }}</span>
+  <button class="text-red-400 hover:underline"
+          hx-post="{% url 'content:delete_item' item.id %}"
+          hx-target="closest [data-node='item']" hx-swap="outerHTML">Remove</button>
+</div>

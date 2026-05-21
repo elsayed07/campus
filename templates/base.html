@@ -14,16 +14,29 @@
   </script>
   <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <style>
+    input:not([type=checkbox]):not([type=radio]), select, textarea {
+      width: 100%; margin-top: .25rem; border-radius: .375rem;
+      border: 1px solid #3f3f46; background: #18181b; color: #fafafa;
+      padding: .5rem .75rem; font-size: .875rem;
+    }
+    input:focus, select, textarea:focus { outline: 2px solid #4f46e5; outline-offset: 0; }
+  </style>
   {% block head %}{% endblock %}
 </head>
-<body class="h-full bg-zinc-950 text-zinc-100 antialiased">
+<body class="h-full bg-zinc-950 text-zinc-100 antialiased"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
   <header class="border-b border-zinc-800">
     <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
       <a href="{% url 'home' %}" class="text-lg font-semibold tracking-tight">
         <span class="text-brand-500">●</span> Campus
       </a>
       <div class="flex items-center gap-4 text-sm">
+        <a href="{% url 'catalog:course_list' %}" class="text-zinc-300 hover:text-white">Courses</a>
         {% if request.user.is_authenticated %}
+          {% if request.user.is_instructor %}
+            <a href="{% url 'catalog:teach' %}" class="text-zinc-300 hover:text-white">Teach</a>
+          {% endif %}
           <span class="text-zinc-400">{{ request.user.display_name }}</span>
           <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
             <button class="rounded-md px-3 py-1.5 text-zinc-300 hover:bg-zinc-800">Sign out</button>

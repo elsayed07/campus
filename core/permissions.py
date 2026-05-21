@@ -2,6 +2,7 @@ from collections.abc import Callable
 from functools import wraps
 
 from django.contrib.auth.mixins import AccessMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 
 from core.enums import Role
@@ -42,7 +43,7 @@ def role_required(*roles: str) -> Callable:
         @wraps(view_func)
         def wrapped(request: HttpRequest, *args, **kwargs):
             if not has_role(request.user, *roles):
-                raise PermissionDeniedError()
+                raise PermissionDenied
             return view_func(request, *args, **kwargs)
 
         return wrapped

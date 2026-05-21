@@ -1,0 +1,32 @@
+<div class="rounded-md border border-zinc-800 bg-zinc-950" data-node="lesson" data-id="{{ lesson.id }}">
+  <div class="flex items-center justify-between px-3 py-2">
+    <span class="text-sm">{{ lesson.title }}{% if lesson.is_preview %}
+      <span class="ml-1 text-xs text-brand-500">preview</span>{% endif %}</span>
+    <button class="text-xs text-red-400 hover:underline"
+            hx-post="{% url 'content:delete_lesson' lesson.id %}"
+            hx-target="closest [data-node='lesson']" hx-swap="outerHTML"
+            hx-confirm="Delete this lesson?">Delete</button>
+  </div>
+
+  <div class="border-t border-zinc-800 px-3 py-2">
+    <div id="items-{{ lesson.id }}" class="space-y-1">
+      {% for item in lesson.items.all %}
+        {% include "content/partials/item.html" with item=item %}
+      {% endfor %}
+    </div>
+
+    <form class="mt-2 flex flex-wrap gap-2"
+          hx-post="{% url 'content:add_item' lesson.id %}"
+          hx-target="#items-{{ lesson.id }}" hx-swap="beforeend"
+          hx-on::after-request="this.reset()">
+      <select name="kind" class="!w-auto">
+        <option value="text">Text</option>
+        <option value="video">Video</option>
+        <option value="file">File</option>
+        <option value="embed">Embed</option>
+      </select>
+      <input name="title" placeholder="Content title" class="!w-auto flex-1">
+      <button class="whitespace-nowrap rounded-md bg-zinc-800 px-3 py-1 text-xs hover:bg-zinc-700">Add content</button>
+    </form>
+  </div>
+</div>

@@ -8,6 +8,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("apps.accounts.urls")),
     path("oauth/", include("social_django.urls", namespace="social")),
+    path("", include("apps.catalog.urls")),
+    path("", include("apps.content.urls")),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
 ]
 
