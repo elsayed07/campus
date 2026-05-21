@@ -28,6 +28,45 @@
         <p class="text-zinc-400">Curriculum coming soon.</p>
       {% endfor %}
     </div>
+
+    <div class="mt-10 flex items-center justify-between">
+      <h2 class="text-xl font-semibold">Reviews</h2>
+      {% if course.rating_count %}
+        <span class="text-sm text-zinc-400">{{ course.rating_avg }}★ · {{ course.rating_count }} review{{ course.rating_count|pluralize }}</span>
+      {% endif %}
+    </div>
+
+    {% if enrolled %}
+      <form method="post" action="{% url 'reviews:submit' course.slug %}" class="mt-3 rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+        {% csrf_token %}
+        <div class="flex items-center gap-3">
+          <label class="text-sm text-zinc-300">Your rating</label>
+          <select name="rating" class="!w-auto">
+            {% for n in "54321"|make_list %}
+              <option value="{{ n }}" {% if my_review and my_review.rating|stringformat:'s' == n %}selected{% endif %}>{{ n }}★</option>
+            {% endfor %}
+          </select>
+        </div>
+        <textarea name="body" rows="3" class="mt-3" placeholder="Share your experience">{% if my_review %}{{ my_review.body }}{% endif %}</textarea>
+        <button class="mt-2 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium hover:bg-brand-500">
+          {% if my_review %}Update review{% else %}Submit review{% endif %}
+        </button>
+      </form>
+    {% endif %}
+
+    <div class="mt-4 space-y-3">
+      {% for review in reviews %}
+        <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+          <div class="flex items-center justify-between text-sm">
+            <span class="font-medium">{{ review.student.display_name }}</span>
+            <span class="text-brand-400">{{ review.rating }}★</span>
+          </div>
+          {% if review.body %}<p class="mt-1 text-sm text-zinc-400">{{ review.body }}</p>{% endif %}
+        </div>
+      {% empty %}
+        <p class="text-sm text-zinc-500">No reviews yet.</p>
+      {% endfor %}
+    </div>
   </div>
 
   <aside class="lg:col-span-1">

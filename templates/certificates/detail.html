@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Certificate — Campus{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-lg text-center">
+  <h1 class="text-2xl font-semibold">Certificate of Completion</h1>
+  <p class="mt-2 text-zinc-400">{{ course.title }}</p>
+
+  <div class="mt-6 rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+    <p class="text-sm text-zinc-400">Serial</p>
+    <p class="font-mono text-lg">{{ certificate.serial }}</p>
+    {% if certificate.is_ready %}
+      <a href="{% url 'certificates:download' course.slug %}"
+         class="mt-5 inline-block rounded-md bg-brand-600 px-5 py-2 font-medium hover:bg-brand-500">Download PDF</a>
+    {% else %}
+      <p class="mt-5 text-sm text-zinc-500">Your certificate PDF is being generated — check back shortly.</p>
+    {% endif %}
+    <p class="mt-4 text-xs text-zinc-500">
+      Verify at <a href="{% url 'certificates:verify' certificate.serial %}" class="text-brand-500 hover:underline">/verify/{{ certificate.serial }}/</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

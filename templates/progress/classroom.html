@@ -7,13 +7,20 @@
   <div class="lg:col-span-2">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">{{ room.enrollment.course.title }}</h1>
-      <a href="{% url 'chat:room' room.enrollment.course.slug %}"
-         class="rounded-md border border-zinc-700 px-3 py-1.5 text-sm hover:bg-zinc-900">Course chat</a>
+      <div class="flex gap-2">
+        <a href="{% url 'forums:index' room.enrollment.course.slug %}"
+           class="rounded-md border border-zinc-700 px-3 py-1.5 text-sm hover:bg-zinc-900">Discussion</a>
+        <a href="{% url 'chat:room' room.enrollment.course.slug %}"
+           class="rounded-md border border-zinc-700 px-3 py-1.5 text-sm hover:bg-zinc-900">Course chat</a>
+      </div>
     </div>
     {% if room.enrollment.is_completed %}
       <div class="mt-4 rounded-lg border border-green-800 bg-green-950/40 p-5">
         <p class="font-medium text-green-300">Course complete 🎉</p>
-        <p class="mt-1 text-sm text-zinc-400">Your certificate will be available once that phase ships.</p>
+        <a href="{% url 'certificates:detail' room.enrollment.course.slug %}"
+           class="mt-3 inline-block rounded-md bg-brand-600 px-4 py-2 text-sm font-medium hover:bg-brand-500">
+          View your certificate
+        </a>
       </div>
     {% elif room.next_lesson %}
       <div class="mt-4 rounded-lg border border-zinc-800 bg-zinc-900 p-5">

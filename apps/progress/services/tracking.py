@@ -69,9 +69,10 @@ def _refresh_enrollment(enrollment: Enrollment) -> None:
 
 
 def _on_course_completed(enrollment_id) -> None:
-    """Course-completion side-effects. Certificate issuance is added in Phase 6."""
+    """Course-completion side-effects: notify the learner and issue a certificate."""
     from django.urls import reverse
 
+    from apps.certificates.services import issue_certificate
     from apps.notifications.services import notify
     from core.enums import NotificationKind
 
@@ -88,3 +89,4 @@ def _on_course_completed(enrollment_id) -> None:
         title=f"You completed {enrollment.course.title}",
         url=reverse("progress:classroom", args=[enrollment.course.slug]),
     )
+    issue_certificate(enrollment=enrollment)

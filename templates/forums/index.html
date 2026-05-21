@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Discussion · {{ course.title }} — Campus{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold">{{ course.title }} · Discussion</h1>
+    <a href="{% url 'forums:new_thread' course.slug %}"
+       class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium hover:bg-brand-500">New thread</a>
+  </div>
+
+  <ul class="mt-6 divide-y divide-zinc-800 rounded-lg border border-zinc-800">
+    {% for thread in threads %}
+      <li class="px-4 py-3">
+        <a href="{% url 'forums:thread' course.slug thread.id %}" class="flex items-center justify-between hover:text-white">
+          <span>
+            {% if thread.is_pinned %}<span class="text-xs text-brand-500">PINNED </span>{% endif %}
+            {{ thread.title }}
+          </span>
+          <span class="text-xs text-zinc-500">{{ thread.post_count }} repl{{ thread.post_count|pluralize:"y,ies" }}</span>
+        </a>
+        <p class="mt-1 text-xs text-zinc-500">by {{ thread.author.display_name }} · {{ thread.last_activity_at|timesince }} ago</p>
+      </li>
+    {% empty %}
+      <li class="px-4 py-6 text-center text-zinc-500">No discussions yet — start one.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

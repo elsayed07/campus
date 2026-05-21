@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}New thread — Campus{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-2xl">
+  <h1 class="text-2xl font-semibold">New thread</h1>
+  <form method="post" class="mt-6 space-y-4">
+    {% csrf_token %}
+    <div>
+      <label class="block text-sm text-zinc-300">Title</label>
+      <input name="title" required>
+    </div>
+    <div>
+      <label class="block text-sm text-zinc-300">Message</label>
+      <textarea name="body" rows="6" required></textarea>
+    </div>
+    <div class="flex gap-3">
+      <button class="rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">Post thread</button>
+      <a href="{% url 'forums:index' course.slug %}" class="rounded-md border border-zinc-700 px-4 py-2 hover:bg-zinc-900">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
