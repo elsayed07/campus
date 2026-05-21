@@ -59,6 +59,15 @@ class BillingInterval(models.TextChoices):
     YEAR = "year", "Yearly"
 
 
+class EventKind(models.TextChoices):
+    COURSE_VIEW = "course_view", "Course view"
+    ENROLL = "enroll", "Enrollment"
+    LESSON_COMPLETE = "lesson_complete", "Lesson completed"
+    COURSE_COMPLETE = "course_complete", "Course completed"
+    PAYMENT = "payment", "Payment"
+    REVIEW = "review", "Review"
+
+
 class NotificationKind(models.TextChoices):
     ENROLLMENT = "enrollment", "Enrollment"
     PROGRESS = "progress", "Progress"

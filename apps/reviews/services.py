@@ -33,6 +33,11 @@ def upsert_review(*, course: Course, student, rating: int, body: str = "") -> Re
         defaults={"rating": rating, "body": body},
     )
     _recompute_course_rating(course)
+
+    from apps.analytics.events import record_event
+    from core.enums import EventKind
+
+    record_event(kind=EventKind.REVIEW, actor=student, course=course, rating=rating)
     return review
 
 

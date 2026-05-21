@@ -44,6 +44,11 @@ def enroll(*, student, course: Course, payment_verified: bool = False) -> Enroll
         title=f"You're enrolled in {course.title}",
         url=reverse("progress:classroom", args=[course.slug]),
     )
+
+    from apps.analytics.events import record_event
+    from core.enums import EventKind
+
+    record_event(kind=EventKind.ENROLL, actor=student, course=course)
     return enrollment
 
 

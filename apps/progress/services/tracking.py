@@ -33,11 +33,23 @@ def mark_lesson_complete(*, enrollment: Enrollment, lesson: Lesson) -> LessonPro
     record, _ = LessonProgress.objects.get_or_create(
         enrollment=enrollment, lesson=lesson
     )
-    if record.completed_at is None:
+    newly_completed = record.completed_at is None
+    if newly_completed:
         record.completed_at = timezone.now()
         record.save(update_fields=["completed_at", "updated_at"])
 
     _refresh_enrollment(enrollment)
+
+    if newly_completed:
+        from apps.analytics.events import record_event
+        from core.enums import EventKind
+
+        record_event(
+            kind=EventKind.LESSON_COMPLETE,
+            actor=enrollment.student,
+            course=enrollment.course,
+            lesson=lesson,
+        )
     return record
 
 
@@ -90,3 +102,12 @@ def _on_course_completed(enrollment_id) -> None:
         url=reverse("progress:classroom", args=[enrollment.course.slug]),
     )
     issue_certificate(enrollment=enrollment)
+
+    from apps.analytics.events import record_event
+    from core.enums import EventKind
+
+    record_event(
+        kind=EventKind.COURSE_COMPLETE,
+        actor=enrollment.student,
+        course=enrollment.course,
+    )

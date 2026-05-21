@@ -29,7 +29,12 @@ def course_detail(request, slug):
     course = selectors.course_with_outline(slug=slug)
     if course is None or (not course.is_published and course.owner_id != request.user.id):
         raise Http404
+    from apps.analytics.events import record_event
     from apps.reviews import selectors as review_selectors
+    from core.enums import EventKind
+
+    if course.is_published:
+        record_event(kind=EventKind.COURSE_VIEW, actor=request.user, course=course)
 
     enrolled = False
     my_review = None

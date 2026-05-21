@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Analytics — Campus{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold">Analytics</h1>
+
+<div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  {% with o=overview %}
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <p class="text-sm text-zinc-400">Enrollments</p>
+      <p class="mt-1 text-2xl font-bold">{{ o.total_enrollments }}</p>
+    </div>
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <p class="text-sm text-zinc-400">Completions</p>
+      <p class="mt-1 text-2xl font-bold">{{ o.total_completions }}</p>
+    </div>
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <p class="text-sm text-zinc-400">Active (7d)</p>
+      <p class="mt-1 text-2xl font-bold">{{ o.active_learners_7d }}</p>
+    </div>
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
+      <p class="text-sm text-zinc-400">Revenue</p>
+      <p class="mt-1 text-2xl font-bold">${{ o.revenue }}</p>
+    </div>
+  {% endwith %}
+</div>
+
+<h2 class="mt-10 text-xl font-semibold">Course funnels</h2>
+<div class="mt-3 overflow-hidden rounded-lg border border-zinc-800">
+  <table class="w-full text-sm">
+    <thead class="bg-zinc-900 text-left text-zinc-400">
+      <tr>
+        <th class="px-4 py-3 font-medium">Course</th>
+        <th class="px-4 py-3 font-medium">Views</th>
+        <th class="px-4 py-3 font-medium">Enrolled</th>
+        <th class="px-4 py-3 font-medium">Started</th>
+        <th class="px-4 py-3 font-medium">Completed</th>
+        <th class="px-4 py-3 font-medium">Rate</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-zinc-800">
+      {% for row in courses %}
+        <tr>
+          <td class="px-4 py-3">
+            <a href="{% url 'analytics:course' row.course.slug %}" class="hover:text-white">{{ row.course.title }}</a>
+          </td>
+          <td class="px-4 py-3">{{ row.funnel.views }}</td>
+          <td class="px-4 py-3">{{ row.funnel.enrollments }}</td>
+          <td class="px-4 py-3">{{ row.funnel.started }}</td>
+          <td class="px-4 py-3">{{ row.funnel.completed }}</td>
+          <td class="px-4 py-3">{{ row.funnel.completion_rate }}%</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="px-4 py-6 text-center text-zinc-500">No courses yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

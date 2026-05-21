@@ -101,6 +101,16 @@ def _fulfill_course_order(session: dict, metadata: dict) -> None:
         student=order.student, course=order.course, payment_verified=True
     )
 
+    from apps.analytics.events import record_event
+    from core.enums import EventKind
+
+    record_event(
+        kind=EventKind.PAYMENT,
+        actor=order.student,
+        course=order.course,
+        amount=float(order.amount),
+    )
+
 
 @transaction.atomic
 def _activate_subscription(session: dict, metadata: dict) -> None:

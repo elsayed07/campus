@@ -21,6 +21,7 @@ urlpatterns = [
     path("", include("apps.forums.urls")),
     path("", include("apps.reviews.urls")),
     path("", include("apps.certificates.urls")),
+    path("", include("apps.analytics.urls")),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
 ]
 

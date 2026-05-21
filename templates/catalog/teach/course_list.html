@@ -3,8 +3,12 @@
 {% block content %}
 <div class="flex items-center justify-between">
   <h1 class="text-2xl font-semibold">Your courses</h1>
-  <a href="{% url 'catalog:course_create' %}"
-     class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium hover:bg-brand-500">New course</a>
+  <div class="flex gap-2">
+    <a href="{% url 'analytics:dashboard' %}"
+       class="rounded-md border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-900">Analytics</a>
+    <a href="{% url 'catalog:course_create' %}"
+       class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium hover:bg-brand-500">New course</a>
+  </div>
 </div>
 
 <div class="mt-6 overflow-hidden rounded-lg border border-zinc-800">

@@ -3,6 +3,12 @@
 {% block content %}
 <h1 class="text-2xl font-semibold">My learning</h1>
 
+<div class="mt-4 flex gap-4 text-sm text-zinc-400">
+  <span><span class="font-semibold text-zinc-100">{{ stats.active }}</span> in progress</span>
+  <span><span class="font-semibold text-zinc-100">{{ stats.completed }}</span> completed</span>
+  <span><span class="font-semibold text-zinc-100">{{ stats.lessons_completed_7d }}</span> lessons this week</span>
+</div>
+
 <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
   {% for enrollment in enrollments %}
     <a href="{% url 'progress:classroom' enrollment.course.slug %}"

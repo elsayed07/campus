@@ -42,6 +42,7 @@ LOCAL_APPS = [
     "apps.forums",
     "apps.reviews",
     "apps.certificates",
+    "apps.analytics",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -158,6 +159,15 @@ CELERY_RESULT_BACKEND = "django-db"
 CELERY_TASK_ALWAYS_EAGER = False
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_TASK_TRACK_STARTED = True
+
+from celery.schedules import crontab  # noqa: E402
+
+CELERY_BEAT_SCHEDULE = {
+    "rollup-daily-stats": {
+        "task": "apps.analytics.tasks.rollup_daily_stats",
+        "schedule": crontab(minute=0, hour=2),
+    },
+}
 
 # JWT
 SIMPLE_JWT = {

@@ -25,5 +25,14 @@ def enroll(request, slug):
 
 @login_required
 def my_courses(request):
+    from apps.analytics import selectors as analytics_selectors
+
     enrollments = selectors.active_enrollments(student=request.user)
-    return render(request, "enrollment/my_courses.html", {"enrollments": enrollments})
+    return render(
+        request,
+        "enrollment/my_courses.html",
+        {
+            "enrollments": enrollments,
+            "stats": analytics_selectors.learner_overview(user=request.user),
+        },
+    )
