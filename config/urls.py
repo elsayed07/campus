@@ -4,8 +4,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from api.v1.api import api as api_v1
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/v1/", api_v1.urls),
     path("accounts/", include("apps.accounts.urls")),
     path("oauth/", include("social_django.urls", namespace="social")),
     path("", include("apps.catalog.urls")),
