@@ -37,6 +37,8 @@ LOCAL_APPS = [
     "apps.enrollment",
     "apps.progress",
     "apps.payments",
+    "apps.notifications",
+    "apps.chat",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -67,6 +69,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.notifications.context_processors.unread_notifications",
             ],
         },
     },

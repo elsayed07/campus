@@ -1,5 +1,9 @@
-from django.urls import URLPattern
+from django.urls import path
 
-# WebSocket routes are registered here as realtime apps come online
-# (chat + notifications in Phase 5).
-websocket_urlpatterns: list[URLPattern] = []
+from apps.chat.consumers import ChatConsumer
+from apps.notifications.consumers import NotificationConsumer
+
+websocket_urlpatterns = [
+    path("ws/notifications/", NotificationConsumer.as_asgi()),
+    path("ws/chat/<slug:slug>/", ChatConsumer.as_asgi()),
+]

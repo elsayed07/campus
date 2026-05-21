@@ -69,6 +69,22 @@ def _refresh_enrollment(enrollment: Enrollment) -> None:
 
 
 def _on_course_completed(enrollment_id) -> None:
-    """Hook for course-completion side-effects (certificate issuance + notifications
-    are wired in later phases)."""
-    return None
+    """Course-completion side-effects. Certificate issuance is added in Phase 6."""
+    from django.urls import reverse
+
+    from apps.notifications.services import notify
+    from core.enums import NotificationKind
+
+    enrollment = (
+        Enrollment.objects.select_related("course", "student")
+        .filter(pk=enrollment_id)
+        .first()
+    )
+    if enrollment is None:
+        return
+    notify(
+        recipient=enrollment.student,
+        kind=NotificationKind.PROGRESS,
+        title=f"You completed {enrollment.course.title}",
+        url=reverse("progress:classroom", args=[enrollment.course.slug]),
+    )

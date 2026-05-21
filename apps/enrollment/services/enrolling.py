@@ -1,9 +1,11 @@
 from django.db import transaction
 from django.db.models import F
+from django.urls import reverse
 from django.utils import timezone
 
 from apps.catalog.models import Course
-from core.enums import CourseState, EnrollmentStatus
+from apps.notifications.services import notify
+from core.enums import CourseState, EnrollmentStatus, NotificationKind
 from shared.exceptions import ConflictError, PaymentError, ValidationError
 
 from ..models import Enrollment
@@ -35,6 +37,12 @@ def enroll(*, student, course: Course, payment_verified: bool = False) -> Enroll
 
     Course.objects.filter(pk=course.pk).update(
         enrolled_count=F("enrolled_count") + 1
+    )
+    notify(
+        recipient=student,
+        kind=NotificationKind.ENROLLMENT,
+        title=f"You're enrolled in {course.title}",
+        url=reverse("progress:classroom", args=[course.slug]),
     )
     return enrollment
 
