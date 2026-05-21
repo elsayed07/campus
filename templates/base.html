@@ -5,73 +5,95 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Campus{% endblock %}</title>
+  <meta name="description" content="Campus — courses, cohorts and certificates on a modern e-learning platform.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: { extend: { colors: { brand: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } } } }
+      theme: { extend: {
+        colors: { brand: {
+          400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca'
+        } },
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+      } }
     }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <style>
     input:not([type=checkbox]):not([type=radio]), select, textarea {
-      width: 100%; margin-top: .25rem; border-radius: .375rem;
+      width: 100%; margin-top: .25rem; border-radius: .5rem;
       border: 1px solid #3f3f46; background: #18181b; color: #fafafa;
-      padding: .5rem .75rem; font-size: .875rem;
+      padding: .55rem .8rem; font-size: .875rem; transition: border-color .15s, box-shadow .15s;
     }
-    input:focus, select, textarea:focus { outline: 2px solid #4f46e5; outline-offset: 0; }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.25);
+    }
+    :focus-visible { outline: 2px solid #818cf8; outline-offset: 2px; }
+    /* HTMX request progress bar */
+    #htmx-progress { position: fixed; top: 0; left: 0; height: 2px; width: 0;
+      background: #6366f1; z-index: 60; transition: width .3s ease; opacity: 0; }
+    .htmx-request #htmx-progress { width: 80%; opacity: 1; }
+    [x-cloak] { display: none !important; }
   </style>
   {% block head %}{% endblock %}
 </head>
-<body class="h-full bg-zinc-950 text-zinc-100 antialiased"
-      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-  <header class="border-b border-zinc-800">
+<body class="flex min-h-full flex-col bg-zinc-950 text-zinc-100 antialiased"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+      hx-indicator="#htmx-progress">
+  <div id="htmx-progress"></div>
+
+  <header class="sticky top-0 z-40 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur"
+          x-data="{ open: false }">
     <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-      <a href="{% url 'home' %}" class="text-lg font-semibold tracking-tight">
+      <a href="{% url 'home' %}" class="flex items-center gap-2 text-lg font-semibold tracking-tight">
         <span class="text-brand-500">●</span> Campus
       </a>
-      <div class="flex items-center gap-4 text-sm">
-        <a href="{% url 'catalog:course_list' %}" class="text-zinc-300 hover:text-white">Courses</a>
-        {% if request.user.is_authenticated %}
-          <a href="{% url 'enrollment:my_courses' %}" class="text-zinc-300 hover:text-white">My learning</a>
-          {% if request.user.is_instructor %}
-            <a href="{% url 'catalog:teach' %}" class="text-zinc-300 hover:text-white">Teach</a>
-          {% endif %}
-          <a href="{% url 'notifications:inbox' %}" class="relative text-zinc-300 hover:text-white"
-             x-data="{ count: {{ unread_notifications }} }"
-             x-init="
-               const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-               const s = new WebSocket(`${proto}://${location.host}/ws/notifications/`);
-               s.onmessage = (e) => { const d = JSON.parse(e.data); if (d.unread !== undefined) count = d.unread; };
-             ">
-            Alerts
-            <span x-show="count > 0"
-                  class="absolute -right-3 -top-2 rounded-full bg-brand-600 px-1.5 text-xs"
-                  x-text="count"></span>
-          </a>
-          <span class="text-zinc-400">{{ request.user.display_name }}</span>
-          <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
-            <button class="rounded-md px-3 py-1.5 text-zinc-300 hover:bg-zinc-800">Sign out</button>
-          </form>
-        {% else %}
-          <a href="{% url 'accounts:login' %}" class="text-zinc-300 hover:text-white">Sign in</a>
-          <a href="{% url 'accounts:signup' %}" class="rounded-md bg-brand-600 px-3 py-1.5 font-medium hover:bg-brand-500">Get started</a>
-        {% endif %}
+
+      <button class="sm:hidden rounded-md p-2 text-zinc-300 hover:bg-zinc-800" @click="open = !open"
+              aria-label="Toggle navigation">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      <div class="hidden items-center gap-5 text-sm sm:flex">
+        {% include "components/_navlinks.html" %}
       </div>
     </nav>
+
+    <div x-show="open" x-cloak class="sm:hidden">
+      <div class="space-y-1 border-t border-zinc-800 px-4 py-3 text-sm">
+        {% include "components/_navlinks.html" %}
+      </div>
+    </div>
   </header>
 
   {% if messages %}
-    <div class="mx-auto max-w-6xl px-4 pt-4">
+    <div class="pointer-events-none fixed right-4 top-16 z-50 w-full max-w-sm space-y-2">
       {% for message in messages %}
-        <div class="rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm">{{ message }}</div>
+        <div class="pointer-events-auto rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm shadow-lg
+                    {% if message.tags == 'error' %}border-red-800{% elif message.tags == 'success' %}border-green-800{% endif %}"
+             x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4500)"
+             x-transition.opacity.duration.300ms>
+          <div class="flex items-start justify-between gap-3">
+            <span>{{ message }}</span>
+            <button @click="show = false" class="text-zinc-500 hover:text-zinc-300" aria-label="Dismiss">&times;</button>
+          </div>
+        </div>
       {% endfor %}
     </div>
   {% endif %}
 
-  <main class="mx-auto max-w-6xl px-4 py-10">
+  <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
     {% block content %}{% endblock %}
   </main>
+
+  <footer class="border-t border-zinc-800/80">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-6 text-sm text-zinc-500 sm:flex-row">
+      <span><span class="text-brand-500">●</span> Campus</span>
+      <span>Built for learners and the people who teach them.</span>
+    </div>
+  </footer>
 </body>
 </html>

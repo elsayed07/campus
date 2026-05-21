@@ -1,17 +1,41 @@
 {% extends "base.html" %}
 {% block title %}Campus — learn without the tutorial feel{% endblock %}
 {% block content %}
-<section class="py-16 text-center">
-  <h1 class="mx-auto max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
-    Courses, cohorts, and certificates on one production-grade platform.
+<section class="relative overflow-hidden py-16 text-center sm:py-24">
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(40rem_20rem_at_50%_-10%,rgba(99,102,241,0.18),transparent)]"></div>
+  <span class="inline-flex items-center rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-xs text-zinc-400">
+    A production-grade e-learning platform
+  </span>
+  <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
+    Courses, cohorts, and certificates —
+    <span class="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">in one place.</span>
   </h1>
-  <p class="mx-auto mt-5 max-w-xl text-zinc-400">
-    Campus is an e-learning SaaS: structured courses, real-time discussion,
-    progress tracking, and instructor analytics.
+  <p class="mx-auto mt-5 max-w-xl text-lg text-zinc-400">
+    Structured courses, real-time discussion, adaptive progress tracking,
+    and instructor analytics. Built for real learners, not demos.
   </p>
-  <div class="mt-8 flex justify-center gap-3">
-    <a href="{% url 'accounts:signup' %}" class="rounded-md bg-brand-600 px-5 py-2.5 font-medium hover:bg-brand-500">Create an account</a>
-    <a href="{% url 'accounts:login' %}" class="rounded-md border border-zinc-700 px-5 py-2.5 hover:bg-zinc-900">Sign in</a>
+  <div class="mt-8 flex flex-wrap justify-center gap-3">
+    <a href="{% url 'catalog:course_list' %}" class="rounded-md bg-brand-600 px-5 py-2.5 font-medium hover:bg-brand-500">Browse courses</a>
+    {% if not request.user.is_authenticated %}
+      <a href="{% url 'accounts:signup' %}" class="rounded-md border border-zinc-700 px-5 py-2.5 hover:bg-zinc-900">Create an account</a>
+    {% else %}
+      <a href="{% url 'enrollment:my_courses' %}" class="rounded-md border border-zinc-700 px-5 py-2.5 hover:bg-zinc-900">Go to my learning</a>
+    {% endif %}
+  </div>
+</section>
+
+<section class="grid gap-5 sm:grid-cols-3">
+  <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+    <h3 class="font-semibold">Adaptive learning paths</h3>
+    <p class="mt-1 text-sm text-zinc-400">Lessons unlock as learners progress, with per-course progression rules.</p>
+  </div>
+  <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+    <h3 class="font-semibold">Live discussion & chat</h3>
+    <p class="mt-1 text-sm text-zinc-400">Per-course forums and real-time chat keep cohorts engaged.</p>
+  </div>
+  <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+    <h3 class="font-semibold">Certificates & analytics</h3>
+    <p class="mt-1 text-sm text-zinc-400">Completion certificates for learners and conversion funnels for instructors.</p>
   </div>
 </section>
 {% endblock %}

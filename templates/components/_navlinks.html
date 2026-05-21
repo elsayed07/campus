@@ -1,0 +1,28 @@
+{# Shared nav links for desktop bar and mobile menu. #}
+<a href="{% url 'catalog:course_list' %}" class="block py-1 text-zinc-300 hover:text-white">Courses</a>
+{% if request.user.is_authenticated %}
+  <a href="{% url 'enrollment:my_courses' %}" class="block py-1 text-zinc-300 hover:text-white">My learning</a>
+  {% if request.user.is_instructor %}
+    <a href="{% url 'catalog:teach' %}" class="block py-1 text-zinc-300 hover:text-white">Teach</a>
+  {% endif %}
+  <a href="{% url 'notifications:inbox' %}" class="relative block py-1 text-zinc-300 hover:text-white"
+     x-data="{ count: {{ unread_notifications }} }"
+     x-init="
+       const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+       const s = new WebSocket(`${proto}://${location.host}/ws/notifications/`);
+       s.onmessage = (e) => { const d = JSON.parse(e.data); if (d.unread !== undefined) count = d.unread; };
+     ">
+    Alerts
+    <span x-show="count > 0" x-cloak
+          class="ml-1 inline-flex items-center rounded-full bg-brand-600 px-1.5 text-xs"
+          x-text="count"></span>
+  </a>
+  <span class="hidden text-zinc-400 sm:inline">{{ request.user.display_name }}</span>
+  <form method="post" action="{% url 'accounts:logout' %}" class="inline">{% csrf_token %}
+    <button class="rounded-md px-3 py-1.5 text-zinc-300 hover:bg-zinc-800">Sign out</button>
+  </form>
+{% else %}
+  <a href="{% url 'accounts:login' %}" class="block py-1 text-zinc-300 hover:text-white">Sign in</a>
+  <a href="{% url 'accounts:signup' %}"
+     class="inline-block rounded-md bg-brand-600 px-3 py-1.5 font-medium text-white hover:bg-brand-500">Get started</a>
+{% endif %}
