@@ -12,6 +12,10 @@ CELERY_RESULT_BACKEND = "cache+memory://"
 
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
+# Disabled by default so unrelated login tests are deterministic; the rate-limit
+# test re-enables it with override_settings.
+RATELIMIT_ENABLE = False
+
 CACHES = {
     "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}
 }

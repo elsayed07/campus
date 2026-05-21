@@ -5,8 +5,10 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from api.v1.api import api as api_v1
+from core.health import healthz
 
 urlpatterns = [
+    path("healthz", healthz, name="healthz"),
     path("admin/", admin.site.urls),
     path("api/v1/", api_v1.urls),
     path("accounts/", include("apps.accounts.urls")),
