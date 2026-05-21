@@ -12,6 +12,7 @@ urlpatterns = [
     path("", include("apps.content.urls")),
     path("", include("apps.enrollment.urls")),
     path("", include("apps.progress.urls")),
+    path("", include("apps.payments.urls")),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
 ]
 

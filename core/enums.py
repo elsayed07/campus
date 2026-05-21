@@ -47,6 +47,18 @@ class SubscriptionStatus(models.TextChoices):
     INCOMPLETE = "incomplete", "Incomplete"
 
 
+class OrderStatus(models.TextChoices):
+    PENDING = "pending", "Pending"
+    PAID = "paid", "Paid"
+    FAILED = "failed", "Failed"
+    REFUNDED = "refunded", "Refunded"
+
+
+class BillingInterval(models.TextChoices):
+    MONTH = "month", "Monthly"
+    YEAR = "year", "Yearly"
+
+
 class NotificationKind(models.TextChoices):
     ENROLLMENT = "enrollment", "Enrollment"
     PROGRESS = "progress", "Progress"

@@ -40,14 +40,20 @@
           Go to course
         </a>
       {% elif request.user.is_authenticated %}
-        <form method="post" action="{% url 'enrollment:enroll' course.slug %}" class="mt-4">
-          {% csrf_token %}
-          <button class="w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">
-            {% if course.is_free %}Enroll for free{% else %}Enroll{% endif %}
-          </button>
-        </form>
-        {% if not course.is_free %}
-          <p class="mt-2 text-center text-xs text-zinc-500">Checkout is wired up in the payments phase.</p>
+        {% if course.is_free %}
+          <form method="post" action="{% url 'enrollment:enroll' course.slug %}" class="mt-4">
+            {% csrf_token %}
+            <button class="w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">
+              Enroll for free
+            </button>
+          </form>
+        {% else %}
+          <form method="post" action="{% url 'payments:checkout' course.slug %}" class="mt-4">
+            {% csrf_token %}
+            <button class="w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">
+              {% if course.pricing_model == 'subscription' %}Get with subscription{% else %}Buy this course{% endif %}
+            </button>
+          </form>
         {% endif %}
       {% else %}
         <a href="{% url 'accounts:login' %}?next={{ request.path }}"

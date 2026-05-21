@@ -84,4 +84,4 @@ class Course(BaseModel):
 
     @property
     def is_free(self) -> bool:
-        return self.pricing_model == PricingModel.FREE or self.price == 0
+        return self.pricing_model == PricingModel.FREE

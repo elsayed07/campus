@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Plans — Campus{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold">Subscription plans</h1>
+<p class="mt-1 text-zinc-400">Unlock every subscription course with one plan.</p>
+
+<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {% for plan in plans %}
+    <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+      <h2 class="font-medium">{{ plan.name }}</h2>
+      <p class="mt-2 text-3xl font-bold">${{ plan.amount }}
+        <span class="text-sm font-normal text-zinc-400">/ {{ plan.get_interval_display|lower }}</span>
+      </p>
+      <p class="mt-2 text-sm text-zinc-400">{{ plan.description }}</p>
+      <form method="post" action="{% url 'payments:subscribe' plan.slug %}" class="mt-4">
+        {% csrf_token %}
+        <button class="w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">Subscribe</button>
+      </form>
+    </div>
+  {% empty %}
+    <p class="text-zinc-400">No plans available yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

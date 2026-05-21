@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Payment received — Campus{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md text-center">
+  <h1 class="text-2xl font-semibold">Thank you!</h1>
+  <p class="mt-2 text-zinc-400">
+    We're confirming your payment for <strong>{{ course.title }}</strong>.
+    Your enrollment unlocks as soon as Stripe confirms the charge.
+  </p>
+  <div class="mt-6 flex justify-center gap-3">
+    <a href="{% url 'progress:classroom' course.slug %}"
+       class="rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">Go to course</a>
+    <a href="{% url 'enrollment:my_courses' %}"
+       class="rounded-md border border-zinc-700 px-4 py-2 hover:bg-zinc-900">My learning</a>
+  </div>
+</div>
+{% endblock %}
