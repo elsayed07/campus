@@ -29,7 +29,16 @@ def course_detail(request, slug):
     course = selectors.course_with_outline(slug=slug)
     if course is None or (not course.is_published and course.owner_id != request.user.id):
         raise Http404
-    return render(request, "catalog/course_detail.html", {"course": course})
+    enrolled = False
+    if request.user.is_authenticated:
+        from apps.enrollment import selectors as enrollment_selectors
+
+        enrolled = enrollment_selectors.is_enrolled(student=request.user, course=course)
+    return render(
+        request,
+        "catalog/course_detail.html",
+        {"course": course, "enrolled": enrolled},
+    )
 
 
 def _owned_course(request, slug) -> Course:

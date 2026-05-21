@@ -10,6 +10,8 @@ urlpatterns = [
     path("oauth/", include("social_django.urls", namespace="social")),
     path("", include("apps.catalog.urls")),
     path("", include("apps.content.urls")),
+    path("", include("apps.enrollment.urls")),
+    path("", include("apps.progress.urls")),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
 ]
 

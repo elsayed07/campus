@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load content_extras %}
+{% block title %}{{ lesson.title }} — Campus{% endblock %}
+{% block content %}
+<div class="grid gap-6 lg:grid-cols-3">
+  <aside class="lg:col-span-1">
+    {% include "progress/_outline.html" with current_lesson_id=lesson.id|stringformat:"s" %}
+  </aside>
+
+  <div class="lg:col-span-2">
+    <a href="{% url 'progress:classroom' room.enrollment.course.slug %}"
+       class="text-sm text-zinc-400 hover:text-white">← Back to course</a>
+    <h1 class="mt-2 text-2xl font-semibold">{{ lesson.title }}</h1>
+
+    <div class="mt-5 space-y-6">
+      {% for item in lesson.items.all %}
+        <section>
+          {% if item.title %}<h2 class="text-lg font-medium">{{ item.title }}</h2>{% endif %}
+          {% if item.kind == "text" %}
+            <div class="prose prose-invert mt-2 max-w-none text-zinc-300">{{ item.body|markdownify }}</div>
+          {% elif item.kind == "video" %}
+            {% if item.url %}
+              <div class="mt-2 aspect-video">
+                <iframe src="{{ item.url }}" class="h-full w-full rounded-lg" allowfullscreen></iframe>
+              </div>
+            {% elif item.media %}
+              <video controls class="mt-2 w-full rounded-lg"><source src="{{ item.media.url }}"></video>
+            {% endif %}
+          {% elif item.kind == "file" %}
+            {% if item.media %}
+              <a href="{{ item.media.url }}" class="mt-2 inline-block text-brand-500 hover:underline" download>
+                Download {{ item.title|default:"file" }}
+              </a>
+            {% endif %}
+          {% elif item.kind == "embed" %}
+            <div class="mt-2 aspect-video">
+              <iframe src="{{ item.url }}" class="h-full w-full rounded-lg" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+        </section>
+      {% empty %}
+        <p class="text-zinc-400">This lesson has no content yet.</p>
+      {% endfor %}
+    </div>
+
+    <form method="post"
+          action="{% url 'progress:complete_lesson' room.enrollment.course.slug lesson.id %}"
+          class="mt-8">
+      {% csrf_token %}
+      <button class="rounded-md bg-brand-600 px-5 py-2 font-medium hover:bg-brand-500"
+              {% if is_done %}disabled{% endif %}>
+        {% if is_done %}Completed ✓{% else %}Mark complete & continue{% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

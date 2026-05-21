@@ -34,10 +34,27 @@
     <div class="rounded-lg border border-zinc-800 bg-zinc-900 p-5">
       <p class="text-2xl font-bold">{% if course.is_free %}Free{% else %}${{ course.price }}{% endif %}</p>
       <p class="mt-1 text-sm text-zinc-400">{{ course.enrolled_count }} enrolled</p>
-      <button class="mt-4 w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">
-        Enroll
-      </button>
-      <p class="mt-2 text-center text-xs text-zinc-500">Enrollment lands in the next phase.</p>
+      {% if enrolled %}
+        <a href="{% url 'progress:classroom' course.slug %}"
+           class="mt-4 block w-full rounded-md bg-brand-600 px-4 py-2 text-center font-medium hover:bg-brand-500">
+          Go to course
+        </a>
+      {% elif request.user.is_authenticated %}
+        <form method="post" action="{% url 'enrollment:enroll' course.slug %}" class="mt-4">
+          {% csrf_token %}
+          <button class="w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">
+            {% if course.is_free %}Enroll for free{% else %}Enroll{% endif %}
+          </button>
+        </form>
+        {% if not course.is_free %}
+          <p class="mt-2 text-center text-xs text-zinc-500">Checkout is wired up in the payments phase.</p>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+           class="mt-4 block w-full rounded-md bg-brand-600 px-4 py-2 text-center font-medium hover:bg-brand-500">
+          Sign in to enroll
+        </a>
+      {% endif %}
     </div>
   </aside>
 </div>

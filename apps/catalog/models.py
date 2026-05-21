@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
-from core.enums import CourseState, PricingModel
+from core.enums import CourseState, PricingModel, ProgressionMode
 from shared.models import BaseModel
 
 
@@ -53,6 +53,11 @@ class Course(BaseModel):
 
     state = models.CharField(
         max_length=20, choices=CourseState.choices, default=CourseState.DRAFT
+    )
+    progression_mode = models.CharField(
+        max_length=20,
+        choices=ProgressionMode.choices,
+        default=ProgressionMode.SEQUENTIAL,
     )
     published_at = models.DateTimeField(null=True, blank=True)
 

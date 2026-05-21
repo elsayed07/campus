@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}My learning — Campus{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold">My learning</h1>
+
+<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {% for enrollment in enrollments %}
+    <a href="{% url 'progress:classroom' enrollment.course.slug %}"
+       class="rounded-lg border border-zinc-800 bg-zinc-900 p-5 hover:border-brand-600">
+      <p class="text-xs uppercase tracking-wide text-brand-500">{{ enrollment.course.subject.name }}</p>
+      <h2 class="mt-1 font-medium">{{ enrollment.course.title }}</h2>
+      <div class="mt-4 h-2 overflow-hidden rounded-full bg-zinc-800">
+        <div class="h-full bg-brand-600" style="width: {{ enrollment.progress_percent }}%"></div>
+      </div>
+      <p class="mt-2 text-xs text-zinc-400">{{ enrollment.progress_percent }}% complete</p>
+    </a>
+  {% empty %}
+    <p class="text-zinc-400">You haven't enrolled in any courses yet.
+      <a href="{% url 'catalog:course_list' %}" class="text-brand-500 hover:underline">Browse courses</a>.</p>
+  {% endfor %}
+</div>
+{% endblock %}

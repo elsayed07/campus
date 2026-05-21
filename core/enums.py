@@ -27,6 +27,11 @@ class EnrollmentStatus(models.TextChoices):
     EXPIRED = "expired", "Expired"
 
 
+class ProgressionMode(models.TextChoices):
+    OPEN = "open", "Open — any lesson, any order"
+    SEQUENTIAL = "sequential", "Sequential — unlock as you complete"
+
+
 class ContentKind(models.TextChoices):
     TEXT = "text", "Rich text"
     VIDEO = "video", "Video"
