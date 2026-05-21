@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Campus{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { colors: { brand: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } } } }
+    }
+  </script>
+  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  {% block head %}{% endblock %}
+</head>
+<body class="h-full bg-zinc-950 text-zinc-100 antialiased">
+  <header class="border-b border-zinc-800">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <a href="{% url 'home' %}" class="text-lg font-semibold tracking-tight">
+        <span class="text-brand-500">●</span> Campus
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        {% if request.user.is_authenticated %}
+          <span class="text-zinc-400">{{ request.user.display_name }}</span>
+          <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+            <button class="rounded-md px-3 py-1.5 text-zinc-300 hover:bg-zinc-800">Sign out</button>
+          </form>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="text-zinc-300 hover:text-white">Sign in</a>
+          <a href="{% url 'accounts:signup' %}" class="rounded-md bg-brand-600 px-3 py-1.5 font-medium hover:bg-brand-500">Get started</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  {% if messages %}
+    <div class="mx-auto max-w-6xl px-4 pt-4">
+      {% for message in messages %}
+        <div class="rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main class="mx-auto max-w-6xl px-4 py-10">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

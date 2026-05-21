@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Create your account — Campus{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-sm">
+  <h1 class="text-2xl font-semibold">Create your account</h1>
+  <p class="mt-1 text-sm text-zinc-400">Start learning or teaching on Campus.</p>
+  <form method="post" class="mt-6 space-y-4">
+    {% csrf_token %}
+    {% for field in form %}
+      <div>
+        <label class="block text-sm text-zinc-300">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<p class="mt-1 text-xs text-zinc-500">{{ field.help_text|safe }}</p>{% endif %}
+        {% for error in field.errors %}<p class="mt-1 text-xs text-red-400">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    <button class="w-full rounded-md bg-brand-600 px-4 py-2 font-medium hover:bg-brand-500">Create account</button>
+  </form>
+  <p class="mt-4 text-sm text-zinc-400">Already have an account?
+    <a href="{% url 'accounts:login' %}" class="text-brand-500 hover:underline">Sign in</a>.
+  </p>
+</div>
+{% endblock %}
