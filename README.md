@@ -4,6 +4,31 @@ A production-grade e-learning platform: structured courses, adaptive progress,
 real-time discussion and chat, payments, certificates, a versioned REST API and
 instructor analytics.
 
+## Demo & screenshots
+
+A walkthrough — browsing the catalog, a course's curriculum, the instructor's HTMX
+course builder, and the learner classroom with adaptive progress tracking.
+
+<p align="center">
+  <img src="docs/screenshots/demo.gif" alt="Campus walkthrough" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/landing.png" alt="Campus landing page" width="100%">
+</p>
+
+| Course catalog | Course curriculum |
+| :---: | :---: |
+| <img src="docs/screenshots/courses.png" alt="Course catalog" width="420"> | <img src="docs/screenshots/course-detail.png" alt="Course curriculum and enrollment" width="420"> |
+
+| Instructor course builder (HTMX) | Learner classroom & progress |
+| :---: | :---: |
+| <img src="docs/screenshots/course-builder.png" alt="HTMX course builder" width="420"> | <img src="docs/screenshots/classroom.png" alt="Learner classroom with progress tracking" width="420"> |
+
+<p align="center">
+  <img src="docs/screenshots/analytics.png" alt="Instructor analytics — KPIs and course funnels" width="80%">
+</p>
+
 ## Highlights
 
 - **Courses & CMS** — subjects, courses with a draft → review → published workflow,
